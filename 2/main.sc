@@ -26,8 +26,15 @@ class MultisetString(private val elements: Map[String, Int]) {
   
   // Intersection operation
   def *(other: MultisetString): MultisetString = {
-    new MultisetString(elements.filter {
-      case (element, count) => other.elements.getOrElse(element, 0) >= count
+    new MultisetString(elements.flatMap {
+      case (element, count) =>
+        val otherCount = other.elements.getOrElse(element, 0)
+        val res = count.min(otherCount)
+        if (res > 0) {
+          Some(element -> res)
+        } else {
+          None
+        }
     })
   }
   
